@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="d-flex justify-content-around mt-3">
+  <h1>User Details</h1> 
+    </div>
+    <div class="row">
+    <div class="offset-1 col-4 box mt-2">
+      <div class="row">
+      <div class="col-4 mt-2">
+      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="" height="100px" width="100px">
+      </div>
+      <div class="col-6 mt-2">
+      <p>{{user?.name}}</p>
+      <p>{{user?.statusMessage}}</p>
+      <p>{{user?.email}}</p>
+      <p>{{user?.age}}</p>
+      <p>{{user?.isPublic}}</p>
+      <p>{{user?.createdAt | date: 'dd-MM-yyyy hh:mm:a'}}</p>
+      </div>
+      </div>
+    </div>
+    </div>
+  </div>

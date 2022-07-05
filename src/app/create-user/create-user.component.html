@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="d-flex justify-content-around mt-3">
+  <h1>Users</h1> 
+    </div>
+    <div class="row">
+    <div class="offset-1 col-4 box mt-2">
+      <div class="row">
+      <div class="col-4 mt-2">
+      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="" height="100px" width="100px">
+      </div>
+      <div class="col-6 mt-2">
+        <form [formGroup]="userForm" (ngSubmit)="create()">
+        <input  type="text" formControlName="name" placeholder="name" class="mt-2">
+        <input  type="text" formControlName="statusMessage" placeholder="statusMessage" class="mt-2">
+        <input  type="text" formControlName="email" placeholder="email" class="mt-2">
+        <input  type="text" formControlName="age" placeholder="age" class="mt-2">
+        <input  type="text" formControlName="isPublic" placeholder="isPublic" class="mt-2">
+        <button type="submit" class="btn btn-primary mt-2" >Create</button>
+        </form>
+      </div>
+      </div>
+    </div>
+    </div>
+  </div>
