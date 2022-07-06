@@ -9,8 +9,24 @@ export class CallService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getUsers(){
-    return this.httpClient.get(`${environment.apiUrl}/users`);
+  getUsers(page?:number,size?:number,search?:any,sort?:string,order?:string){
+    let url = `${environment.apiUrl}/users`;
+    if(page){
+      url = url + `?_page=${page}`
+    }
+    if(size){
+      url = url + `&_limit=${size}`
+    }
+    if(search){
+      url = url + `&_search=${search}`
+    }
+    if(sort){
+      url = url + `&_sort=${sort}`
+    }
+    if(order){
+      url = url + `&_order=${order}`
+    }
+    return this.httpClient.get(url);
   }
 
   getUser(id:number){
@@ -18,7 +34,7 @@ export class CallService {
   }
 
   createUser(item:any){
-    console.log(item)
+    item.createdAt  = new Date(); 
     return this.httpClient.post(`${environment.apiUrl}/users`, item);
   }
 }
