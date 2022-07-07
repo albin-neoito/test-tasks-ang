@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CallService {
       url = url + `&_limit=${size}`
     }
     if(search){
-      url = url + `&_search=${search}`
+      url = url + `&q=${search}`
     }
     if(sort){
       url = url + `&_sort=${sort}`
@@ -26,15 +27,22 @@ export class CallService {
     if(order){
       url = url + `&_order=${order}`
     }
-    return this.httpClient.get(url);
+    return this.httpClient.get<any>(url, {
+      observe: 'response'
+  });
   }
 
-  getUser(id:number){
-    return this.httpClient.get(`${environment.apiUrl}/users/${id}`);
+  getUser(id:number): Observable<any>{
+    return this.httpClient.get<any>(`${environment.apiUrl}/users/${id}`);
   }
 
   createUser(item:any){
     item.createdAt  = new Date(); 
     return this.httpClient.post(`${environment.apiUrl}/users`, item);
+  }
+
+  updateUser(item:any, id:number){
+    item.createdAt  = new Date(); 
+    return this.httpClient.put(`${environment.apiUrl}/users/${id}`, item);
   }
 }

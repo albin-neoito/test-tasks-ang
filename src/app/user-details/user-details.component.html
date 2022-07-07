@@ -3,20 +3,46 @@
   <h1>User Details</h1> 
     </div>
     <div class="row">
-    <div class="offset-1 col-4 box mt-2">
+    <div class="offset-1 col-6 box mt-2">
       <div class="row">
       <div class="col-4 mt-2">
-      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="" height="100px" width="100px">
+      <img [src]="img" alt="" height="100px" width="100px">
       </div>
-      <div class="col-6 mt-2">
-      <p>{{user?.name}}</p>
-      <p>{{user?.statusMessage}}</p>
-      <p>{{user?.email}}</p>
-      <p>{{user?.age}}</p>
-      <p>{{user?.isPublic}}</p>
-      <p>{{user?.createdAt | date: 'dd-MM-yyyy hh:mm:a'}}</p>
+      <div class="col-8 mt-2">
+      <form [formGroup]="userEditForm" (ngSubmit)="update()">
+        <input  type="text" formControlName="name" placeholder="Name" class="mt-2">
+        <span *ngIf="submitted && userEditForm.get('name').hasError('required')" style="color: #dc3545;">
+          *  This field is required
+      </span>
+        <input  type="text" formControlName="statusMessage" placeholder="StatusMessage" class="mt-2">
+        <span *ngIf="submitted && userEditForm.get('statusMessage').hasError('required')" style="color: #dc3545;">
+          *   This field is required
+      </span>
+        <input  type="text" formControlName="email" placeholder="Email" class="mt-2">
+        <div *ngIf="submitted">
+        <span *ngIf="userEditForm.get('email').hasError('required')" style="color: #dc3545;">
+          *   This field is required
+      </span>
+      <span *ngIf="userEditForm.controls.email.errors?.pattern" style="color: #dc3545;">
+        *   Please give an valid email
+    </span>
+        </div>
+        <input  type="text" formControlName="age" placeholder="Age" class="mt-2">
+        <span *ngIf="submitted && userEditForm.get('age').hasError('required')" style="color: #dc3545;">
+          *   This field is required
+      </span>
+        <input  type="text" formControlName="isPublic" placeholder="IsPublic" class="mt-2">
+        <span *ngIf="submitted && userEditForm.get('name').hasError('required')" style="color: #dc3545;">
+          *    This field is required
+      </span>
+      <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2">
+        <button type="submit" class="btn btn-primary mt-2" >Save</button>
+        </form>
       </div>
       </div>
+    </div>
+    <div class="col-5 mt-4">
+      {{user?.createdAt | date: 'dd-MM-yyyy hh:mm:a'}}
     </div>
     </div>
   </div>

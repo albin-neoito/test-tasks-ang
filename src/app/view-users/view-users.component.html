@@ -1,8 +1,8 @@
 <div class="container">
-  <form [formGroup]="userSortForm"  (ngSubmit)="sortBy()">
+  <form [formGroup]="userSortForm">
     <div class="d-flex justify-content-around mt-3">
   <h1>Users</h1> 
-  <input  type="text" formControlName="search" placeholder="search" class="mt-2">
+  <input  type="text" formControlName="search" placeholder="Search">
   <select formControlName="sortByType">
     <option value="">Select</option>
     <option value="age">Age</option>
@@ -13,15 +13,15 @@
     <option value="asc">Asc</option>
     <option value="desc">Desc</option>
   </select>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
     </div>
   </form>
-  <div *ngIf="users?.length">
+  <div *ngIf="users?.length; else notFound">
     <div class="row mt-3">
     <div class="offset-1 col-md-4 col-sm-12 box mt-2" *ngFor="let user of users | paginate: { itemsPerPage: this.pageSize, currentPage: this.curPage, totalItems: total }">
       <div class="row pointer" (click)="getUser(user.id)">
       <div class="col-4 mt-2">
-      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="" height="100px" width="100px">
+      <img [src]="user?.avatarUrl ? user?.avatarUrl : img" alt="" height="100px" width="100px">
       </div>
       <div class="col-6 mt-2">
       <p>{{user?.name}}</p>
@@ -34,4 +34,8 @@
     </div>
     <button type="button" class="btn btn-primary btn-pos" routerLink="/create">New User</button>
   </div>
+
+  <ng-template #notFound>
+    <div class="not-found">Items empty</div>
+</ng-template>
 </div>

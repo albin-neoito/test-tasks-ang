@@ -19,7 +19,7 @@ const routes: Routes = [
     component: UserDetailsComponent
   },
   { 
-    path: '',   
+    path: '**',   
     redirectTo: '/users', 
     pathMatch: 'full'
    },
