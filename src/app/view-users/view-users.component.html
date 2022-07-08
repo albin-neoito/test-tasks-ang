@@ -9,7 +9,6 @@
     <option value="createdAt">Created At</option>
   </select>
   <select formControlName="sortByOrder">
-    <option value="">Select</option>
     <option value="asc">Asc</option>
     <option value="desc">Desc</option>
   </select>
@@ -19,7 +18,7 @@
   <div *ngIf="users?.length; else notFound">
     <div class="row mt-3">
     <div class="offset-1 col-md-4 col-sm-12 box mt-2" *ngFor="let user of users | paginate: { itemsPerPage: this.pageSize, currentPage: this.curPage, totalItems: total }">
-      <div class="row pointer" (click)="getUser(user.id)">
+      <div class="row pointer" [routerLink]="['/users', user.id]">
       <div class="col-4 mt-2">
       <img [src]="user?.avatarUrl ? user?.avatarUrl : img" alt="" height="100px" width="100px">
       </div>

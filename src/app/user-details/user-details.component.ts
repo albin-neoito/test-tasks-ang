@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CallService } from '../call.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-details',
@@ -10,7 +11,7 @@ import { CallService } from '../call.service';
 })
 export class UserDetailsComponent implements OnInit {
 
-  user: any;
+  user: any = {};
   id: any;
   userEditForm: any;
   submitted= false;
@@ -20,7 +21,8 @@ export class UserDetailsComponent implements OnInit {
     private callService: CallService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
     ) {}
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -61,6 +63,7 @@ export class UserDetailsComponent implements OnInit {
     this.submitted = true;
     if(this.userEditForm.valid){
     this.callService.updateUser(this.userEditForm.value, this.id).subscribe((res=>{
+      this.toastr.success('user record updated successfully', 'Success!');
       this.router.navigate(['/users'])
     }
     ), err=> {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 import { CallService } from '../call.service';
 
 @Component({
@@ -15,30 +14,23 @@ export class ViewUsersComponent implements OnInit {
   pageSize = 10;
   total = 0;
   userSortForm: any;
-  sortByType: any;
-  sortByOrder: any;
+  sortByType: string | undefined;
+  sortByOrder: string | undefined;
+  search: string | undefined;
   submitted = false;
   img = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
   constructor(
     private callService: CallService,
-    private router: Router,
     private fb: FormBuilder
     ) {}
   ngOnInit() {
     this.initializeForm();
-     this.callService.getUsers()
-    .subscribe((data) => {
-    this.users = data.body;
-    this.total = this.users.length;
-  });
+    this.getUsers();
   this.userSortForm.get('search').valueChanges.subscribe((val:any) => {
     val = val.trim();
-      if(val.length > 2){
-        this.getUsers();
-      } else if(!val){
-        this.getUsers();
-      }
+    this.search = val;
+    this.getUsers();
   });
 
   this.userSortForm.get('sortByType').valueChanges.subscribe((val:any) => {
@@ -52,10 +44,6 @@ export class ViewUsersComponent implements OnInit {
 });
   }
 
-  getUser(id:any){
-     this.router.navigate(['/users', id])
-  }
-
   getPage(item:number){
     this.curPage = item;
    this.getUsers()
@@ -63,7 +51,7 @@ export class ViewUsersComponent implements OnInit {
 
 
   getUsers(){
-    this.callService.getUsers(this.curPage, this.pageSize, this.userSortForm.value.search, this.sortByType, this.sortByOrder)
+    this.callService.getUsers(this.curPage, this.pageSize, this.search, this.sortByType, this.sortByOrder)
     .subscribe((data: any) => {
       this.total = data.headers.get('X-Total-Count');
     this.users = data.body;
@@ -74,11 +62,8 @@ export class ViewUsersComponent implements OnInit {
     this.userSortForm = this.fb.group({
       search: [''],
       sortByType: [''],
-      sortByOrder: [''],
+      sortByOrder: ['asc'],
     });
   }
-
-
-
 
 }

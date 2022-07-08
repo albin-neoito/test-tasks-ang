@@ -31,11 +31,18 @@
         <span *ngIf="submitted && userEditForm.get('age').hasError('required')" style="color: #dc3545;">
           *   This field is required
       </span>
-        <input  type="text" formControlName="isPublic" placeholder="IsPublic" class="mt-2">
-        <span *ngIf="submitted && userEditForm.get('name').hasError('required')" style="color: #dc3545;">
+        <!-- <input  type="text" formControlName="isPublic" placeholder="IsPublic" class="mt-2"> -->
+        <div>
+        IsPublic
+        <input class="ml-2" type="radio" value="true" formControlName="isPublic">Yes
+        <input class="ml-2" type="radio" value="false" formControlName="isPublic">No
+        <span *ngIf="submitted && userEditForm.get('isPublic').hasError('required')" style="color: #dc3545;">
           *    This field is required
       </span>
+      </div>
+      <div>
       <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2">
+      </div>
         <button type="submit" class="btn btn-primary mt-2" >Save</button>
         </form>
       </div>
