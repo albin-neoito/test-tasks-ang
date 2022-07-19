@@ -48,7 +48,9 @@ export class CreateUserComponent implements OnDestroy{
 }
 
 ngOnDestroy(): void {
+  if(this.subscription){
   this.subscription.unsubscribe();
+  }
 }
 
 }
