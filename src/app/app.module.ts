@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -11,17 +11,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxTrimDirectiveModule } from 'ngx-trim-directive';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AuthenticateHttpInterceptor } from './HttpErrorInterceptor.service';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateUserComponent,
     ViewUsersComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     NgxPaginationModule,
+    NgxTrimDirectiveModule,
     ToastrModule.forRoot(
       {
         timeOut: 3000,
@@ -33,7 +39,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticateHttpInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

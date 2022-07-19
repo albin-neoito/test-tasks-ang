@@ -10,25 +10,25 @@
       </div>
       <div class="col-8 mt-2">
       <form [formGroup]="userEditForm" (ngSubmit)="update()">
-        <input  type="text" formControlName="name" placeholder="Name" class="mt-2">
-        <span *ngIf="submitted && userEditForm.get('name').hasError('required')" style="color: #dc3545;">
+        <input  type="text" formControlName="name" placeholder="Name" class="mt-2" trim="blur">
+        <span *ngIf="submitted && userEditForm.get('name')?.hasError('required')" style="color: #dc3545;">
           *  This field is required
       </span>
-        <input  type="text" formControlName="statusMessage" placeholder="StatusMessage" class="mt-2">
-        <span *ngIf="submitted && userEditForm.get('statusMessage').hasError('required')" style="color: #dc3545;">
+        <input  type="text" formControlName="statusMessage" placeholder="StatusMessage" class="mt-2" trim="blur">
+        <span *ngIf="submitted && userEditForm.get('statusMessage')?.hasError('required')" style="color: #dc3545;">
           *   This field is required
       </span>
-        <input  type="text" formControlName="email" placeholder="Email" class="mt-2">
+        <input  type="text" formControlName="email" placeholder="Email" class="mt-2" trim="blur">
         <div *ngIf="submitted">
-        <span *ngIf="userEditForm.get('email').hasError('required')" style="color: #dc3545;">
+        <span *ngIf="userEditForm.get('email')?.hasError('required')" style="color: #dc3545;">
           *   This field is required
       </span>
-      <span *ngIf="userEditForm.controls.email.errors?.pattern" style="color: #dc3545;">
+      <span *ngIf="userEditForm.get('email')?.hasError('pattern')" style="color: #dc3545;">
         *   Please give an valid email
     </span>
         </div>
-        <input  type="text" formControlName="age" placeholder="Age" class="mt-2">
-        <span *ngIf="submitted && userEditForm.get('age').hasError('required')" style="color: #dc3545;">
+        <input  type="text" formControlName="age" placeholder="Age" class="mt-2" trim="blur">
+        <span *ngIf="submitted && userEditForm.get('age')?.hasError('required')" style="color: #dc3545;">
           *   This field is required
       </span>
         <!-- <input  type="text" formControlName="isPublic" placeholder="IsPublic" class="mt-2"> -->
@@ -36,12 +36,9 @@
         IsPublic
         <input class="ml-2" type="radio" value="true" formControlName="isPublic">Yes
         <input class="ml-2" type="radio" value="false" formControlName="isPublic">No
-        <span *ngIf="submitted && userEditForm.get('isPublic').hasError('required')" style="color: #dc3545;">
-          *    This field is required
-      </span>
       </div>
       <div>
-      <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2">
+      <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2" trim="blur">
       </div>
         <button type="submit" class="btn btn-primary mt-2" >Save</button>
         </form>

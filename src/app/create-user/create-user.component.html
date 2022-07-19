@@ -8,34 +8,41 @@
       <div class="col-md-4 col-sm-6 mt-2">
       <img [src]="img" alt="" height="100px" width="100px">
       </div>
-      <div class="col-md-6 col-sm-6 mt-2">
+      <div class="col-md-12 col-sm-6 mt-2">
         <form [formGroup]="userForm" (ngSubmit)="create()">
-        <input  type="text" formControlName="name" placeholder="Name" class="mt-2">
-        <span *ngIf="submitted && userForm.get('name').hasError('required')" style="color: #dc3545;">
+        <input  type="text" formControlName="name" placeholder="Name" class="mt-2" trim="blur">
+        <div *ngIf="submitted && userForm.get('name')?.hasError('required')" style="color: #dc3545;">
           *  This field is required
-      </span>
-        <input  type="text" formControlName="statusMessage" placeholder="StatusMessage" class="mt-2">
-        <span *ngIf="submitted && userForm.get('statusMessage').hasError('required')" style="color: #dc3545;">
+      </div>
+        <input  type="text" formControlName="statusMessage" placeholder="StatusMessage" class="mt-2" trim="blur">
+        <div *ngIf="submitted && userForm.get('statusMessage')?.hasError('required')" style="color: #dc3545;">
           *   This field is required
-      </span>
-        <input  type="text" formControlName="email" placeholder="Email" class="mt-2">
+      </div>
+        <input  type="text" formControlName="email" placeholder="Email" class="mt-2" trim="blur">
         <div *ngIf="submitted">
-        <span *ngIf="userForm.get('email').hasError('required')" style="color: #dc3545;">
+        <span *ngIf="userForm.get('email')?.hasError('required')" style="color: #dc3545;">
           *   This field is required
       </span>
-      <span *ngIf="userForm.controls.email.errors?.pattern" style="color: #dc3545;">
+      <span *ngIf="userForm.get('email')?.hasError('pattern')" style="color: #dc3545;">
         *   Please give an valid email
     </span>
         </div>
-        <input  type="text" formControlName="age" placeholder="Age" class="mt-2">
-        <span *ngIf="submitted && userForm.get('age').hasError('required')" style="color: #dc3545;">
+        <input  type="text" formControlName="age" placeholder="Age" class="mt-2" trim="blur">
+        <div *ngIf="submitted" style="color: #dc3545;">
+        <span *ngIf="userForm.get('age')?.hasError('required')">
           *   This field is required
       </span>
+      <span *ngIf="userForm.get('age')?.hasError('pattern')">
+        *   This field can only contain numbers
+    </span>
+        </div>
         IsPublic
         <input class="ml-2" type="radio" value="true" formControlName="isPublic">Yes
         <input class="ml-2" type="radio" value="false" formControlName="isPublic">No
-      <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2">
+      <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2" trim="blur">
+      <div>
         <button type="submit" class="btn btn-primary mt-2" >Create</button>
+      </div>
         </form>
       </div>
       </div>
