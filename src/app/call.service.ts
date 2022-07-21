@@ -45,4 +45,8 @@ export class CallService {
     item.createdAt  = new Date(); 
     return this.httpClient.put(`${environment.apiUrl}/users/${id}`, item);
   }
+
+  deleteUser(id:number | null | undefined | string){ 
+    return this.httpClient.delete(`${environment.apiUrl}/users/${id}`);
+  }
 }

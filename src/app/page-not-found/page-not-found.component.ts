@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageNotFoundComponent implements OnInit {
 
+  msg = '';
   constructor() { }
 
   ngOnInit(): void {
+    console.log(navigator.onLine)
+    if(navigator.onLine){
+     this.msg = '404 Page Not found';
+    } else {
+      this.msg = 'Internet is interrupted'
+    }
   }
+
 
 }

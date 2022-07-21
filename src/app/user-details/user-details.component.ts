@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CallService } from '../call.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+declare var $: any;
 
 @Component({
   selector: 'app-user-details',
@@ -15,6 +16,9 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
   user: any = {};
   id: number | null | undefined | string;
   submitted= false;
+  isLoading = true;
+  isDisabled = false;
+  deleteId: number | undefined;
   img = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   subscription!: Subscription;
   userEditForm = this.fb.group({
@@ -39,6 +43,7 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
     .subscribe((data) => {
       if(data){
     this.user = data;
+    this.isLoading = false;
     this.assignValuesToUserForm();
       }
   });
@@ -59,14 +64,45 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
   update(){
     this.submitted = true;
     if(this.userEditForm.valid){
+      this.isDisabled = true;
     this.subscription = this.callService.updateUser(this.userEditForm.value, this.id).subscribe((res=>{
       this.toastr.success('user record updated successfully', 'Success!');
       this.router.navigate(['/users'])
     }
     ), err=> {
+      this.isDisabled = false;
       console.log(err)
     })
   }
+  }
+
+  openDeleteModal(id:number){
+    this.deleteId = id;
+    setTimeout(() => {
+      $("#deleteModal").modal('show');
+    },100);
+  }
+
+
+  deleteRecord(){
+    if(this.deleteId){
+    this.subscription = this.callService.deleteUser(this.deleteId).subscribe({
+    next: () => { 
+      setTimeout(() => {
+            $("#deleteModal").modal('hide');
+            this.router.navigate(['/users'])
+          },100)
+    },
+    error: (e) => console.error(e),
+    })
+  }
+  }
+
+  closeModal(){
+    this.deleteId = 0;
+    setTimeout(() => {
+      $("#deleteModal").modal('hide');
+    },100)
   }
 
   ngOnDestroy(): void {

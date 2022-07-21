@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 export class CreateUserComponent implements OnDestroy{
   
   submitted = false;
+  isDisabled = false;
   img = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   subscription!: Subscription;
   userForm = this.fb.group({
@@ -37,11 +38,13 @@ export class CreateUserComponent implements OnDestroy{
   create(){
     this.submitted = true;
     if(this.userForm.valid){
+      this.isDisabled = true;
     this.subscription = this.callService.createUser(this.userForm.value).subscribe((res=>{
       this.toastr.success('User record created successfully', 'Success!');
       this.router.navigate(['/users'])
     }
     ), err=> {
+      this.isDisabled = false;
       console.log(err)
     })
   }

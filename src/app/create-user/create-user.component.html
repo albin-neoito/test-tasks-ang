@@ -41,7 +41,7 @@
         <input class="ml-2" type="radio" value="false" formControlName="isPublic">No
       <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2" trim="blur">
       <div>
-        <button type="submit" class="btn btn-primary mt-2" >Create</button>
+        <button type="submit" class="btn btn-primary mt-2" [disabled]="isDisabled">Create</button>
       </div>
         </form>
       </div>

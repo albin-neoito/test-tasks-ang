@@ -4,7 +4,6 @@
   <h1>Users</h1> 
   <input  type="text" formControlName="search" placeholder="Search">
   <select formControlName="sortByType">
-    <option value="">Select</option>
     <option value="age">Age</option>
     <option value="createdAt">Created At</option>
   </select>
@@ -15,6 +14,7 @@
   <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
     </div>
   </form>
+  <div *ngIf="!isLoading; else loading1">
   <div *ngIf="users?.length; else notFound">
     <div class="row mt-3">
     <div class="offset-1 col-md-4 col-sm-12 box mt-2" *ngFor="let user of users | paginate: { itemsPerPage: this.pageSize, currentPage: this.curPage, totalItems: total }">
@@ -27,14 +27,48 @@
       <p>{{user?.statusMessage}}</p>
       <p>{{user?.createdAt | date: 'dd-MM-yyyy hh:mm:a'}}</p>
       </div>
+      <div class="col-2 mt-2 mr-2">
+        <a (click)="openDeleteModal($event, user.id)">
+        <i class="bi bi-trash" style=" color: red;"></i>
+        </a>
+        <div *ngIf="user.isPublic === 'true'">
+        <i class="bi bi-people-fill"></i>
+        </div>
+      </div>
       </div>
     </div>
     <pagination-controls class="mt-2" (pageChange)="getPage($event)"></pagination-controls>
     </div>
     <button type="button" class="btn btn-primary btn-pos" routerLink="/create">New User</button>
   </div>
-
   <ng-template #notFound>
     <div class="not-found">Items empty</div>
 </ng-template>
+  </div>
+   <ng-template #loading1>
+     <div class="d-flex1">
+      <div class="m-auto">
+    <div class="loading"></div>
+      </div>
+    </div>
+  </ng-template>
+
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="deleteModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you confirm to delete this record?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="deleteRecord()" [disabled]="isDisabled">Confirm</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>
