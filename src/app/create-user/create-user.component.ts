@@ -22,7 +22,7 @@ export class CreateUserComponent implements OnDestroy{
     statusMessage: ['' , Validators.required],
     email: ['' ,Validators.compose ([Validators.required,Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
     age: ['', Validators.compose ([Validators.required, Validators.pattern(/^\d+$/)])],
-    isPublic: ['true', Validators.required],
+    isPublic: ["true", Validators.required],
     avatarUrl: ['']
   });
   
@@ -37,8 +37,14 @@ export class CreateUserComponent implements OnDestroy{
 
   create(){
     this.submitted = true;
+    console.log(this.userForm.value)
     if(this.userForm.valid){
       this.isDisabled = true;
+      if( this.userForm.controls['isPublic'].value === 'true'){
+        this.userForm.patchValue({ isPublic: true})
+      } else {
+        this.userForm.patchValue({ isPublic: false})
+      }
     this.subscription = this.callService.createUser(this.userForm.value).subscribe((res=>{
       this.toastr.success('User record created successfully', 'Success!');
       this.router.navigate(['/users'])
@@ -47,6 +53,7 @@ export class CreateUserComponent implements OnDestroy{
       this.isDisabled = false;
       console.log(err)
     })
+    console.log(this.userForm)
   }
 }
 

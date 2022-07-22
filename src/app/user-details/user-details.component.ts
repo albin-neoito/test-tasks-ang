@@ -26,7 +26,7 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
     statusMessage: ['' , Validators.required],
     email: ['' ,Validators.compose ([Validators.required,Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
     age: ['', Validators.required],
-    isPublic: ['', Validators.required],
+    isPublic: [null, Validators.required],
     avatarUrl: ['']
   });
   
@@ -55,9 +55,10 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
       statusMessage : this.user?.statusMessage,
       email: this.user?.email,
       age: this.user?.age,
-      isPublic: this.user?.isPublic,
+      isPublic: this.user?.isPublic ? "true" : "false",
       avatarUrl: this.user?.avatarUrl
     })
+    console.log(this.userEditForm)
     this.img = (this.user?.avatarUrl) ? this.user.avatarUrl : this.img;
   }
 
@@ -65,7 +66,15 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
     this.submitted = true;
     if(this.userEditForm.valid){
       this.isDisabled = true;
-    this.subscription = this.callService.updateUser(this.userEditForm.value, this.id).subscribe((res=>{
+      let data = this.userEditForm.value;
+      if( this.userEditForm.controls['isPublic'].value === 'true'){
+        data.isPublic = true;
+      } else {
+        data.isPublic = false;
+      }
+      data.createdAt =  this.user?.createdAt;
+      console.log(data)
+    this.subscription = this.callService.updateUser(data, this.id).subscribe((res=>{
       this.toastr.success('user record updated successfully', 'Success!');
       this.router.navigate(['/users'])
     }

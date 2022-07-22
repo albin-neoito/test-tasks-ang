@@ -99,7 +99,7 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
       setTimeout(() => {
             $("#deleteModal").modal('hide');
             this.getUsers();
-            this.router.navigate(['/users'])
+            this.isDisabled = false;
           },100)
     },
     error: (e) => {

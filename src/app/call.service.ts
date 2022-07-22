@@ -41,8 +41,7 @@ export class CallService {
     return this.httpClient.post(`${environment.apiUrl}/users`, item);
   }
 
-  updateUser(item:any, id:number | null | undefined | string){
-    item.createdAt  = new Date(); 
+  updateUser(item:any, id:number | null | undefined | string){ 
     return this.httpClient.put(`${environment.apiUrl}/users/${id}`, item);
   }
 
