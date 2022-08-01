@@ -18,6 +18,7 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "angular-simple-tooltip": "^2.0.0",
     "bootstrap-icons": "^1.9.1",
     "ngx-pagination": "^6.0.2",
     "ngx-toastr": "^14.3.0",

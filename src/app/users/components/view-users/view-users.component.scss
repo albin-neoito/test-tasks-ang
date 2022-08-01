@@ -15,10 +15,15 @@ pagination-controls{
 .btn-pos{
     float: right;
     margin-top: -40px;
+    bottom: 0;
 }
 
 .not-found{
     height: 500px;
     margin: auto
+}
+
+.min-container{
+    min-height: 800px;
 }
 

@@ -12,10 +12,11 @@ export class AuthenticateHttpInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 404) {
-                    this.router.navigate(['/404']);
+                    this.router.navigate(['404']);
                     return EMPTY;
-                } else if(!error.status){
-                    this.router.navigate(['/404'])
+                } else if(!error.status && !navigator.onLine){
+                    console.log('llll')
+                    this.router.navigate(['404'])
                 }
                 console.log(error.status)
                 return throwError(error);
