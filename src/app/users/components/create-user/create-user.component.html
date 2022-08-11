@@ -9,7 +9,7 @@
       <img [src]="img" alt="" height="100px" width="100px">
       </div>
       <div class="col-md-12 col-sm-6 mt-2">
-        <form [formGroup]="userForm" (ngSubmit)="create()">
+        <form [formGroup]="userForm" (ngSubmit)="createUser()">
         <input  type="text" formControlName="name" placeholder="Name" class="mt-2" trim="blur">
         <div *ngIf="submitted && userForm.get('name')?.hasError('required')" style="color: #dc3545;">
           *  This field is required

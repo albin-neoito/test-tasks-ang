@@ -37,58 +37,60 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
     
   ngOnInit() {
     this.initializeForm();
-    if(localStorage.getItem('userSettings')){
-      let settings:any = localStorage.getItem('userSettings');
-       settings = JSON.parse(settings);
-    this.userSortForm.patchValue({
-      search : settings?.search,
-      sortByOrder: settings?.sortByOrder,
-      sortByType: settings?.sortByType
-    })
-    this.search = settings?.search;
-    this.sortByOrder = settings?.sortByOrder;
-    this.sortByType = settings?.sortByType;
-    this.curPage = settings?.page;
-    }
-    this.sortByOrder = !this.sortByOrder ? 'desc': this.sortByOrder;
-    this.sortByType = !this.sortByType ? 'createdAt': this.sortByType;
+    this.setDefaultSettings();
     this.getUsers();
-  this.userSortForm.get('search')!.valueChanges.pipe(
-    debounceTime(500),
-    distinctUntilChanged()
-  ).subscribe(
-    (val:any) => {
-      val = val.trim();
-      this.search = val;
-      this.getUsers();
-    }
-  );
-  this.userSortForm.get('sortByType')!.valueChanges.subscribe((val:any) => {
-      this.sortByType = val;
-      this.getUsers();
-  });
-
-  this.userSortForm.get('sortByOrder')!.valueChanges.subscribe((val:any) => {
-    this.sortByOrder = val;
-    this.getUsers();
-});
+ 
   }
 
-  initializeForm(){ /* Initialize the form */
+  /**
+   * @Description
+   * Initialize the form and listen to search, sort by typem, sort by order fields 
+   * and fetch real time results from the backend
+   */
+  initializeForm(){ 
     this.userSortForm = this.fb.group({
       search: [''],
       sortByType: ['createdAt'],
       sortByOrder: ['desc']
     });
+    this.userSortForm.get('search')!.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(
+      (val:any) => {
+        val = val.trim();
+        this.search = val;
+        this.getUsers();
+      }
+    );
+    this.userSortForm.get('sortByType')!.valueChanges.subscribe((val:any) => {
+        this.sortByType = val;
+        this.getUsers();
+    });
+  
+    this.userSortForm.get('sortByOrder')!.valueChanges.subscribe((val:any) => {
+      this.sortByOrder = val;
+      this.getUsers();
+  });
   }
 
-  getPage(item:number){  /* To get nested pages in pagination */
+  /**
+   *  @Description
+   *  To get nested pages in pagination 
+   * * @param item
+   *   event passed from pagination to know get the current page is clicked by the user
+   */
+  getPage(item:number){  
     this.curPage = item;
    this.getUsers()
   }
 
 
-  getUsers(){ /* To list users based on pagination */
+  /**
+   * @Description
+   * To list users based on pagination
+   */
+  getUsers(){ 
     this.isLoading = true;
    this.subscription =  this.callService.getUsers(this.curPage, this.pageSize, this.search, this.sortByType, this.sortByOrder)
     .subscribe({
@@ -104,13 +106,15 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
   });
   }
 
-  ngOnDestroy(): void {
-    if(this.subscription){
-    this.subscription.unsubscribe();
-    }
-  }
-
-  openDeleteModal(event:any, id:number){ /* open delete confirm modal */
+  /**
+   * @Description
+   * open delete confirm modal
+   * @param event 
+   * MouseEvent to avoid the nested click inside the element
+   * @param id 
+   * selected Id to be deleted from the current list
+   */
+  openDeleteModal(event:MouseEvent, id:number){ 
     event.stopPropagation();
     this.deleteId = id;
     setTimeout(() => {
@@ -118,8 +122,11 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
     },100);
   }
 
-
-  deleteRecord(){ /* Delete the current user from the list */
+/**
+ * @Description
+ * Delete the current user from the list
+ */
+  deleteRecord(){ 
     if(this.deleteId){
       this.isDisabled = true;
     this.subscription = this.callService.deleteUser(this.deleteId).subscribe({
@@ -138,13 +145,21 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
   }
   }
 
-  closeModal(){ /* close or cancel the delete confirm modal */
+/**
+ * @Description
+ * close or cancel the delete confirm modal
+ */
+  closeModal(){ 
     setTimeout(() => {
       $("#deleteModal").modal('hide');
     },100)
   }
 
-  saveSettings(){ /* save current sort settings when redirect back to this page*/
+/**
+ * @Description
+ *  Save current sort settings when redirect back to this page
+ */
+  saveSettings(){ 
     const settings = {
       search: this.search || null, 
       sortByType: this.sortByType,
@@ -152,6 +167,39 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
       page: this.curPage
     };
     localStorage.setItem('userSettings', JSON.stringify(settings));
+  }
+
+/**
+ * @Description
+ * Function to check whether previous user settings such as search,order,type 
+ * and set it for the corresponding fields for better user experience
+ */
+  setDefaultSettings(){
+    if(localStorage.getItem('userSettings')){
+      let settings:any = localStorage.getItem('userSettings');
+       settings = JSON.parse(settings);
+    this.userSortForm.patchValue({
+      search : settings?.search,
+      sortByOrder: settings?.sortByOrder,
+      sortByType: settings?.sortByType
+    })
+    this.search = settings?.search;
+    this.sortByOrder = settings?.sortByOrder;
+    this.sortByType = settings?.sortByType;
+    this.curPage = settings?.page;
+    }
+    this.sortByOrder = !this.sortByOrder ? 'desc': this.sortByOrder;
+    this.sortByType = !this.sortByType ? 'createdAt': this.sortByType;
+  }
+
+  /**
+   * Destroy the subscription call to avoid memory leak
+   */
+
+  ngOnDestroy(): void {
+    if(this.subscription){
+    this.subscription.unsubscribe();
+    }
   }
 
 }

@@ -12,59 +12,72 @@ declare var $: any;
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.scss']
 })
-export class UserDetailsComponent implements OnInit , OnDestroy{
+export class UserDetailsComponent implements OnInit, OnDestroy {
 
   user!: user;
-  id: number | null | undefined | string;
-  query:any;
-  submitted= false;
+  id!: number;
+  submitted = false;
   isLoading = true;
   isDisabled = false;
-  deleteId: number | undefined;
+  deleteId!: number;
   img = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   subscription!: Subscription;
-  userEditForm! :FormGroup;
-  
+  userEditForm!: FormGroup;
+
   constructor(
     private callService: CallService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
     private toastr: ToastrService
-    ) {}
+  ) { }
+
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.id = +this.route.snapshot.params['id'];
     this.initializeForm();
-    console.log(this.query)
-     this.subscription = this.callService.getUser(this.id)
-    .subscribe({
-      next: (data) => {
-      if(data){
-    this.user = data;
-    this.isLoading = false;
-    this.assignValuesToUserForm();
-      }
-  }
-});
-
+    this.getUserDetails()
   }
 
+  /**
+   * @description 
+   * Function to get user details from backend api
+   */
+  getUserDetails() {
+    this.subscription = this.callService.getUser(this.id)
+      .subscribe({
+        next: (data: user) => {
+          if (data) {
+            this.user = data;
+            this.isLoading = false;
+            this.assignValuesToUserForm();
+          }
+        }
+      });
+  }
 
-  initializeForm(){ /* initialize form values */
+/**
+ * @description 
+ * Function to initialize the user form
+ */
+  initializeForm() { 
     this.userEditForm = this.fb.group({
       name: ['', Validators.required],
-      statusMessage: ['' , Validators.required],
-      email: ['' ,Validators.compose ([Validators.required,Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      statusMessage: ['', Validators.required],
+      email: ['', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       age: ['', Validators.required],
       isPublic: [null, Validators.required],
       avatarUrl: ['']
     });
   }
 
-  assignValuesToUserForm(){ /* assign api values to form fields */
+/**
+ * @description
+ * Function to assign api values to form fields
+ */
+  assignValuesToUserForm() { 
     this.userEditForm.setValue({
-      name: this.user?.name, 
-      statusMessage : this.user?.statusMessage,
+      name: this.user?.name,
+      statusMessage: this.user?.statusMessage,
       email: this.user?.email,
       age: this.user?.age,
       isPublic: this.user?.isPublic ? "true" : "false",
@@ -73,61 +86,84 @@ export class UserDetailsComponent implements OnInit , OnDestroy{
     this.img = (this.user?.avatarUrl) ? this.user.avatarUrl : this.img;
   }
 
-  update(){  /* update the details of current user */
+  /**
+   * @description
+   * update the details of current user 
+   */
+  update() {  
     this.submitted = true;
-    if(this.userEditForm.valid){
+    if (this.userEditForm.valid) {
       this.isDisabled = true;
       let data = this.userEditForm.value;
-      if( this.userEditForm.controls['isPublic'].value === 'true'){
+      if (this.userEditForm.controls['isPublic'].value === 'true') {
         data.isPublic = true;
       } else {
         data.isPublic = false;
       }
-      data.createdAt =  this.user?.createdAt;
+      data.createdAt = this.user?.createdAt;
       console.log(data)
-    this.subscription = this.callService.updateUser(data, this.id).subscribe({
-     next:()=> { this.toastr.success('user record updated successfully', 'Success!');
-      this.router.navigate(['/users'])
-    }, error: (e)=> {
-      this.isDisabled = false;
-      console.log(e)
+      this.subscription = this.callService.updateUser(data, this.id).subscribe({
+        next: () => {
+          this.toastr.success('user record updated successfully', 'Success!');
+          this.router.navigate(['/users'])
+        }, error: (e) => {
+          this.isDisabled = false;
+          console.log(e)
+        }
+      })
     }
-  })
-  }
   }
 
-  openDeleteModal(id:number){  /* open delete confirm modal */
+  /**
+   * @description 
+   * Open delete confirm modal
+   * @param id 
+   * Id of the record to be deleted
+   */
+  openDeleteModal(id: number) {  
     this.deleteId = id;
     setTimeout(() => {
       $("#deleteModal").modal('show');
-    },100);
+    }, 100);
   }
 
 
-  deleteRecord(){ /* delete current user record */
-    if(this.deleteId){
-    this.subscription = this.callService.deleteUser(this.deleteId).subscribe({
-    next: () => { 
-      setTimeout(() => {
+  /**
+   * @Description
+   * Function to call delete api for the current user
+   */
+  deleteRecord() { 
+    if (this.deleteId) {
+      this.subscription = this.callService.deleteUser(this.deleteId).subscribe({
+        next: () => {
+          setTimeout(() => {
             $("#deleteModal").modal('hide');
             this.router.navigate(['/users'])
-          },100)
-    },
-    error: (e) => console.error(e),
-    })
-  }
+          }, 100)
+        },
+        error: (e) => console.error(e),
+      })
+    }
   }
 
-  closeModal(){ /* cancel or close the delete confirm modal */
+
+  /**
+   * @description
+   * close the modal
+   */
+  closeModal() { 
     this.deleteId = 0;
     setTimeout(() => {
       $("#deleteModal").modal('hide');
-    },100)
+    }, 100)
   }
 
+   /**
+   * Destroy the subscription call to aavoid memory leak
+   */
   ngOnDestroy(): void {
-    if(this.subscription){
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
