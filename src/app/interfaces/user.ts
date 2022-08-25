@@ -10,3 +10,8 @@ export interface user {
     name: string,
     statusMessage: string
  }
+
+ export interface logUser {
+   email: string,
+   password: string
+ }

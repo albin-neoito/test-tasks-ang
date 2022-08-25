@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="m-align">
+    <h1>Sign Up</h1>
+    <div class="col-md-12 col-sm-6 mt-2">
+        <form [formGroup]="signUpForm" (ngSubmit)="createUser()">
+        <input  type="email" formControlName="email" placeholder="Enter email" class="mt-2" trim="blur">
+        <div *ngIf="submitted && signUpForm.get('email')?.hasError('required')" style="color: #dc3545;">
+          *  This field is required
+      </div>
+      <div *ngIf="submitted && signUpForm.get('email')?.hasError('pattern')" style="color: #dc3545;">
+        *   Please give an valid email
+      </div>
+      <div>
+        <input  type="password" formControlName="password" placeholder="Enter password" class="mt-2" trim="blur">
+        <div *ngIf="submitted && signUpForm.get('password')?.hasError('required')" style="color: #dc3545;">
+          *   This field is required
+      </div>
+      </div>
+      <div>
+        <input  type="password" formControlName="confirmPassword" placeholder="Enter confirm password" class="mt-2" trim="blur">
+        <div style="color: #dc3545;">
+        <div *ngIf="submitted && signUpForm.get('confirmPassword')?.hasError('required')">
+          *   This field is required
+      </div>
+      <div *ngIf="submitted && signUpForm.get('confirmPassword')?.hasError('confirmPasswordValidator')">Passsword and
+        Confirm Password didn't match. </div>
+     </div> 
+      </div>
+      <button type="submit" [disabled]="isDisabled" class="mt-2 btn btn-primary">Sign in</button>
+      <a class="ml-3" routerLink="/sign-in">Login</a>
+        </form>
+    </div>
+    </div>
+    </div>
+    

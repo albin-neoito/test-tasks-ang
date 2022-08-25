@@ -36,9 +36,11 @@
         *   This field can only contain numbers
     </span>
         </div>
+        <div>
         IsPublic
-        <input class="ml-2" type="radio" value="true" formControlName="isPublic">Yes
-        <input class="ml-2" type="radio" value="false" formControlName="isPublic">No
+        <input class="ml-2" type="radio" [value]="true" formControlName="isPublic">Yes
+        <input class="ml-2" type="radio" [value]="false" formControlName="isPublic">No
+        </div>
       <input type="text" formControlName="avatarUrl" placeholder="avatarUrl" class="mt-2" trim="blur">
       <div>
         <button type="submit" class="btn btn-primary mt-2" [disabled]="isDisabled">Create</button>

@@ -26,7 +26,7 @@ const userRoutes: Routes = [
             },
             {
                 path: '**',
-                redirectTo: '/users',
+                redirectTo: '/',
                 pathMatch: 'full'
             }]
     }

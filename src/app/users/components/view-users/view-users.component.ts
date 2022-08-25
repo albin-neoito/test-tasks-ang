@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { CallService } from '../../../services/call.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { user } from "./../../../interfaces/user";
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 declare var $: any;
 
 @Component({
@@ -28,9 +30,12 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   deleteId!: number;
   isDisabled = false;
+  isCalled = false;
 
   constructor(
     private callService: CallService,
+    private authService: AuthService,
+    private router: Router,
     private fb: FormBuilder
     ) {}
 
@@ -38,8 +43,8 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initializeForm();
     this.setDefaultSettings();
+    this.isCalled = true;
     this.getUsers();
- 
   }
 
   /**
@@ -57,19 +62,22 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
       debounceTime(500),
       distinctUntilChanged()
     ).subscribe(
-      (val:any) => {
+      (val:string) => {
+        if(val !== this.search){
         val = val.trim();
         this.search = val;
         this.getUsers();
+        }
       }
     );
-    this.userSortForm.get('sortByType')!.valueChanges.subscribe((val:any) => {
+    this.userSortForm.get('sortByType')!.valueChanges.subscribe((val:string) => {
         this.sortByType = val;
         this.getUsers();
     });
   
-    this.userSortForm.get('sortByOrder')!.valueChanges.subscribe((val:any) => {
+    this.userSortForm.get('sortByOrder')!.valueChanges.subscribe((val:string) => {
       this.sortByOrder = val;
+      console.log(this.isCalled)
       this.getUsers();
   });
   }
@@ -91,6 +99,8 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
    * To list users based on pagination
    */
   getUsers(){ 
+    console.log('lllll')
+    if(this.isCalled){
     this.isLoading = true;
    this.subscription =  this.callService.getUsers(this.curPage, this.pageSize, this.search, this.sortByType, this.sortByOrder)
     .subscribe({
@@ -104,6 +114,7 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
   });
+}
   }
 
   /**
@@ -193,6 +204,7 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @Description
    * Destroy the subscription call to avoid memory leak
    */
 
@@ -200,6 +212,20 @@ export class ViewUsersComponent implements OnInit, OnDestroy {
     if(this.subscription){
     this.subscription.unsubscribe();
     }
+  }
+
+
+  /**
+   * @Description
+   * logout for the current user
+   */
+  logout(){
+    this.isDisabled = true;
+    localStorage.removeItem('loggedIn');
+    this.authService.setLoginStatus(false);
+    setTimeout(() => {
+      this.router.navigate(['/sign-in']);
+    }, 1000)
   }
 
 }
